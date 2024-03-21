@@ -1,6 +1,6 @@
 # devix
 
-Devix is a comprehensive, powerful, and compact JavaScript utility library.
+> Devix is a comprehensive, powerful, and compact JavaScript utility library.
 
 ## Install
 
