@@ -46,8 +46,8 @@ export function stringCase(soure: string, separator = '', separate = '') {
 
 export function setTimer(
   execute: (...args: any[]) => any,
-  delay: number,
-  immediate: boolean
+  delay: number = 0,
+  immediate: boolean = false
 ) {
   let timer: ReturnType<typeof setTimeout> | null = null
 
