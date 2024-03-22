@@ -7,7 +7,7 @@ import terser from '@rollup/plugin-terser'
 import babel from '@rollup/plugin-babel'
 import { DEFAULT_EXTENSIONS } from '@babel/core'
 
-const packname = 'Evenex'
+const packname = 'Devix'
 const entries = ['src/index.ts']
 const plugins = [
   resolve({
