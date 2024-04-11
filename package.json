@@ -1,7 +1,7 @@
 {
   "name": "devix",
   "type": "module",
-  "version": "0.0.16",
+  "version": "0.0.18",
   "description": "Devix is a comprehensive, powerful, and compact JavaScript utility library.",
   "author": "king-3 <w2196592083@gmail.com>",
   "license": "MIT",
