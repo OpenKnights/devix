@@ -43,26 +43,3 @@ export function stringCase(soure: string, separator = '', separate = '') {
   }
   return newStr.join(separate)
 }
-
-export function setTimer(
-  execute: (...args: any[]) => any,
-  delay: number = 0,
-  immediate: boolean = false
-) {
-  let timer: ReturnType<typeof setTimeout> | null = null
-
-  const interval = () => {
-    execute()
-    timer = setTimeout(interval, delay)
-  }
-
-  if (immediate) execute()
-
-  setTimeout(interval, delay)
-
-  return {
-    cancel: () => {
-      if (timer !== null) clearTimeout(timer)
-    }
-  }
-}
