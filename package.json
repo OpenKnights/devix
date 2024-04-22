@@ -38,7 +38,8 @@
     "test": "jest",
     "lint": "eslint src/**/*.{js,jsx,ts,tsx,json}",
     "prettier": "prettier --config .prettierrc.json --write src/**/*.{js,jsx,ts,tsx,json}",
-    "releases": "npx bump && tsx publish.ts"
+    "releases": "npx bump && tsx publish.ts",
+    "versihint": "npx bump"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",
