@@ -1,3 +1,5 @@
+import { Tcase, TCases } from './types'
+
 export function currying(fn: Function) {
   function curried(this: any, ...args: any[]) {
     if (args.length >= fn.length) {
@@ -35,11 +37,25 @@ export function insertStr(soure: string, start: number, newStr: string) {
   return soure.slice(0, start) + newStr + soure.slice(start)
 }
 
-export function stringCase(soure: string, separator = '', separate = '') {
+export function stringCase(
+  soure: string,
+  separa: string[] = ['', ''],
+  cases: TCases = ['upper', 'upper']
+) {
+  const [separator, separate] = separa
+  const [firstCase, argsCase] = cases
   const newStr = soure.split(separator)
+
   for (let i = 0; i < newStr.length; i++) {
-    newStr[i] =
-      newStr[i].slice(0, 1).toUpperCase() + newStr[i].slice(1).toLowerCase()
+    newStr[i] = setCaseType(newStr[i], i === 0 ? firstCase : argsCase)
   }
+
   return newStr.join(separate)
+}
+
+function setCaseType(soure: string, caseType: Tcase) {
+  const newStr =
+    soure.slice(0, 1)[caseType === 'upper' ? 'toUpperCase' : 'toLowerCase']() +
+    soure.slice(1).toLowerCase()
+  return newStr
 }

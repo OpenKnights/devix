@@ -20,3 +20,7 @@ export type ThrottleOptions = {
   leading?: boolean
   trailing?: boolean
 }
+
+//! other types
+export type Tcase = 'upper' | 'lower'
+export type TCases = [Tcase, Tcase]
