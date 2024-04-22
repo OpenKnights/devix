@@ -64,19 +64,19 @@ export const formatTimer: TFormatTimer = (
   return timerStr
 }
 
-export function setTimer(
+export async function setTimer(
   execute: (...args: any[]) => any,
   delay: number = 0,
   immediate: boolean = false
 ) {
   let timer: ReturnType<typeof setTimeout> | null = null
 
-  const interval = () => {
-    execute()
+  const interval = async () => {
+    await execute()
     timer = setTimeout(interval, delay)
   }
 
-  if (immediate) execute()
+  if (immediate) await execute()
 
   setTimeout(interval, delay)
 
