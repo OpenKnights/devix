@@ -1,4 +1,4 @@
-enum SortType {
+export enum SortType {
   ASC = 'ASC',
   DESC = 'DESC'
 }
@@ -7,13 +7,13 @@ function swap<T>(array: T[], index1: number, index2: number): void {
   ;[array[index1], array[index2]] = [array[index2], array[index1]]
 }
 
-function compare<T>(value1: T, value2: T, type: SortType): boolean {
+function compare<T>(value1: T, value2: T, type: SortType | string): boolean {
   return type === SortType.ASC ? value1 > value2 : value1 < value2
 }
 
 export function bubblingSort<T>(
   array: T[],
-  type: SortType = SortType.ASC,
+  type: string = 'ASC',
   key?: keyof T
 ): T[] {
   const length = array.length
