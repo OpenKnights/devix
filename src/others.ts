@@ -1,4 +1,5 @@
-import { Tcase, TCases } from './types'
+import { isType } from './typeof'
+import { Tcase, TCases, TTransGetParams } from '../types'
 
 export function currying(fn: Function) {
   function curried(this: any, ...args: any[]) {
@@ -58,4 +59,29 @@ function setCaseType(soure: string, caseType: Tcase) {
     soure.slice(0, 1)[caseType === 'upper' ? 'toUpperCase' : 'toLowerCase']() +
     soure.slice(1).toLowerCase()
   return newStr
+}
+
+// Transform Parameters
+export const transformGetParams: TTransGetParams = (params) => {
+  let result = ''
+  for (const propName of Object.keys(params)) {
+    const value = params[propName]
+    const part = `${encodeURIComponent(propName)}=`
+    if (isType('empty', value)) continue
+
+    if (!isType('object', value)) {
+      result += `${part + encodeURIComponent(value)}&`
+      continue
+    }
+
+    for (const key of Object.keys(value)) {
+      if (isType('empty', value)) continue
+
+      const params = propName + `[${key}]`
+      const subPart = `${encodeURIComponent(params)}=`
+
+      result += `${subPart + encodeURIComponent(value[key])}&`
+    }
+  }
+  return result.slice(0, -1)
 }

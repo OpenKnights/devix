@@ -25,6 +25,6 @@ test('insertStr', () => {
 })
 
 test('stringCase', () => {
-  const result = stringCase('coder king3', ' ', '-')
-  expect(result).toEqual('Coder-King3')
+  const result = stringCase('coder king3', [' ', ''], ['lower', 'upper'])
+  expect(result).toEqual('coderKing3')
 })
