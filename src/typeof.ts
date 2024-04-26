@@ -1,3 +1,5 @@
+import { ITypeCheckes, TIsType } from '../types'
+
 export default function getDataType(target: any) {
   const type = typeof target
   return type != 'object'
@@ -5,7 +7,7 @@ export default function getDataType(target: any) {
     : Object.prototype.toString.call(target).slice(8, -1).toLowerCase()
 }
 
-const typeCheckers: { [key: string]: (target: any) => boolean } = {
+const typeCheckers: ITypeCheckes = {
   // DataType
   undefined: (target) => typeof target === 'undefined',
   null: (target) => target === null,
@@ -23,10 +25,14 @@ const typeCheckers: { [key: string]: (target: any) => boolean } = {
   set: (target) => target instanceof Set,
   map: (target) => target instanceof Map,
   regexp: (target) => target instanceof RegExp,
-  promise: (target) => target instanceof Promise
+  promise: (target) => target instanceof Promise,
+
+  // ExpandType
+  empty: (target) =>
+    !(target !== null && target !== '' && typeof target !== 'undefined')
 }
 
-export const isType = (type: string, target: any) => {
+export const isType: TIsType = (type: string, target: any) => {
   const dataType = typeCheckers[type]
     ? typeCheckers[type](target)
     : getDataType(target) === type
