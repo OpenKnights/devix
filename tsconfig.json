@@ -10,7 +10,8 @@
     "esModuleInterop": false,
     "strict": true,
     "strictNullChecks": true,
-    "typeRoots": ["node_modules/@types", "src/types.ts"]
+    "allowSyntheticDefaultImports": true,
+    "typeRoots": ["node_modules/@types", "types/index.ts"]
   },
-  "include": ["src/*.ts"]
+  "include": ["src/*.ts", "types/index.ts", "src/server.ts"]
 }
