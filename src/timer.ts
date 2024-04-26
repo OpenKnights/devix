@@ -1,5 +1,5 @@
 import { isType } from './typeof'
-import { TFormatTimer, ITimerObj } from './types'
+import { TFormatTimer, ITimerObj } from '../types'
 
 const formatRules = new Map<string, keyof ITimerObj>([
   ['yyyy', 'year'],

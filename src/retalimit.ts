@@ -1,4 +1,4 @@
-import { ThrottleOptions } from './types'
+import { ThrottleOptions } from '../types'
 
 export function debounce<T extends (...args: any[]) => any>(
   callback: T,
