@@ -7,11 +7,10 @@
     "skipLibCheck": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "esModuleInterop": false,
+    "esModuleInterop": true,
     "strict": true,
     "strictNullChecks": true,
-    "allowSyntheticDefaultImports": true,
-    "typeRoots": ["node_modules/@types", "types/index.ts"]
+    "allowSyntheticDefaultImports": true
   },
-  "include": ["src/*.ts", "types/index.ts", "src/server.ts"]
+  "include": ["src/*.ts", "types/index.d.ts"]
 }

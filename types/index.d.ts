@@ -1,5 +1,3 @@
-import type Koa from 'koa'
-
 //! format types
 export interface ITimerObj {
   year: string
@@ -31,19 +29,13 @@ export interface ITestServer extends Koa {
   port?: number
   url?: string
   listen: () => Promise<any> | any
+  use?: any
 }
 
 interface TestServerOption {
   url: string
   method: string
-  handler: (
-    ctx: Koa.ParameterizedContext<
-      any,
-      Router.IRouterParamContext<any, {}>,
-      any
-    >,
-    next: Koa.Next
-  ) => any
+  handler: (ctx: any, next: any) => any
 }
 
 export interface ITestServerOptions {
