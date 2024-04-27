@@ -5,7 +5,7 @@ import json from 'koa-json'
 import bodyparser from 'koa-bodyparser'
 import { ITestServer, ITestServerOptions } from '../types'
 
-const createTestServer = (options: ITestServerOptions = {}) => {
+export const createTestServer = (options: ITestServerOptions = {}) => {
   const server: ITestServer = new Koa()
   const router: any = new Router()
   server.use(bodyparser({ enableTypes: ['json', 'form', 'text'] }))
@@ -40,5 +40,3 @@ const createTestServer = (options: ITestServerOptions = {}) => {
 
   return server.listen().then(() => server)
 }
-
-export default createTestServer
