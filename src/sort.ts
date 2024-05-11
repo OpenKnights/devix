@@ -4,6 +4,7 @@ export enum SortType {
 }
 
 function swap<T>(array: T[], index1: number, index2: number): void {
+  // eslint-disable-next-line no-param-reassign
   ;[array[index1], array[index2]] = [array[index2], array[index1]]
 }
 
@@ -16,7 +17,7 @@ export function bubblingSort<T>(
   type: string = 'ASC',
   key?: keyof T
 ): T[] {
-  const length = array.length
+  const { length } = array
   if (length < 2) return array
 
   for (let i = 0; i < length - 1; i++) {

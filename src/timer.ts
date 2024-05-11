@@ -4,6 +4,7 @@ import { TFormatTimer, ITimerObj } from '../types'
 const formatRules = new Map<string, keyof ITimerObj>([
   ['yyyy', 'year'],
   ['MM', 'month'],
+
   ['dd', 'day'],
   ['HH', 'hours'],
   ['mm', 'minutes'],

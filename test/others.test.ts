@@ -1,6 +1,6 @@
-import { currying, compose, insertStr, stringCase } from '../src/others'
+import { compose, currying, insertStr, stringCase } from '../src/others'
 
-test('currying', () => {
+test('testing currying', () => {
   const fn = currying((a: number, b: number, c: number) => {
     return a + b + c
   })
@@ -9,7 +9,7 @@ test('currying', () => {
   expect(result).toEqual(6)
 })
 
-test('compose', () => {
+test('testing compose', () => {
   const cps: any = compose(
     (name: string) => name,
     (name: string) => name === 'coderking'
@@ -19,12 +19,12 @@ test('compose', () => {
   expect(result).toEqual(true)
 })
 
-test('insertStr', () => {
+test('testing insertStr', () => {
   const result = insertStr('coderking', 5, '-')
   expect(result).toEqual('coder-king')
 })
 
-test('stringCase', () => {
+test('testing stringCase', () => {
   const result = stringCase('coder king3', [' ', ''], ['lower', 'upper'])
   expect(result).toEqual('coderKing3')
 })

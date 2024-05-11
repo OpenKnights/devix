@@ -4,11 +4,14 @@
  */
 
 const config = {
+  roots: ['<rootDir>/test'],
   clearMocks: true,
   coverageProvider: 'babel',
   extensionsToTreatAsEsm: ['.ts'],
   preset: 'ts-jest',
-  coveragePathIgnorePatterns: ['/node_modules/']
+  testEnvironment: 'node',
+  coveragePathIgnorePatterns: ['/node_modules/'],
+  collectCoverageFrom: ['test/**/*.{js,jsx, tsx, ts}']
 }
 
 export default config

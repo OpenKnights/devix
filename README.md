@@ -1,36 +1,36 @@
 # devix
 
-> devix 是一个全面的、强大的、紧凑的 JavaScript 实用程序库（ 简体中文 | [English](README_en.md) ）
+> Devix is a comprehensive, powerful, and compact JavaScript utility library.（ English | [简体中文](README_zh.md) ）
 
-## 安装
+## Install
 
-请确保您在 Node.js 环境下使用 npm 或其他包管理器安装此库。
+Please make sure you install this library using npm or another package manager in a Node.js environment.
 
 ```shell
 npm install --save-dev devix
 ```
 
-然后，利用现代的模块捆绑工具，如 Vite 或 Webpack，以模块化的语法引入此库。
+Then, utilize modern module bundling tools such as Vite or Webpack to import this library using modular syntax.
 
 ```javascript
-// 使用 ES Module
+// Using ES Module
 import { [[ModuleName]] } from 'devix'
 
-// 使用 CommonJS
+// Using CommonJS
 const { [[ModuleName]]  } = require('devix')
 ```
 
-## 使用
+## Usage
 
 ```javascript
 import { localCache, bubblingSort, isType } from 'devix'
 
-// 使用 localCache
+// Using localCache
 localCache.setCache('userInfo', { name: 'king', age: 18 })
 const userInfo = localCache.get('userInfo')
 console.log('userInfo', userInfo)
 
-// 使用 bubblingSort、
+// Using bubblingSort、
 const arr1 = [123, 346, 62, 2456, 56123, 1, 64, 61, 453, 72345]
 const sortArr1 = bubblingSort(arr1, 'DESC')
 console.log('sortArr1', sortArr1)
@@ -43,7 +43,7 @@ const arr2 = [
 const sortArr2 = bubblingSort(arr2, 'DESC', 'age')
 console.log('sortArr2', sortArr2)
 
-// 使用 isType
+// Using isType
 console.log(`isType(userInfo,'object') -> true`, isType(userInfo, 'object'))
 console.log(
   `isType(userInfo.name,'string') -> true`,
@@ -52,51 +52,51 @@ console.log(
 console.log(`isType(userInfo.age,'number') -> true`, isType(userInfo, 'number'))
 ```
 
-## 方法
+## API
 
-### 缓存相关
+### Cache Apis
 
-提供缓存操作的相关方法。
+Provides methods related to cache operations.
 
 - localCache
 - sessionCache
 
-### 拷贝相关
+### Clone Apis
 
-用于数据复制操作的相关方法。
+Methods for data cloning operations.
 
 - deepClone
 - shallowClone
 
-### 限频相关
+### Retalimit Apis
 
-包含控制操作触发频率的相关方法。
+Includes methods for controlling the frequency of operations.
 
 - throttle
 - debounce
 
-### 排序相关
+### Sort Apis
 
-提供各种排序操作的方法。
+Offers methods for various sorting operations.
 
 - bubblingSort
 
-### 时间相关
+### Time Apis
 
-包括处理时间相关操作的方法。
+Consists of methods for handling time-related operations.
 
 - formatTimer
 - setTimer
 
-### 类型相关
+### Typeof Apis
 
-用于数据类型检测的相关方法。
+Methods for data type detection.
 
 - isType
 
-### 其他方法
+### Other Apis
 
-包括各种其他功能性函数和方法。
+Includes a variety of other functional functions and methods.
 
 - compose
 - currying

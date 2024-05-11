@@ -1,3 +1,4 @@
+import { TDeepClone } from '../types'
 import { isType } from './typeof'
 
 //! Function Shallow Copy
@@ -14,7 +15,7 @@ const isFormat = (target: any) =>
 
 function handleSpeciBoundar<T = any>(
   source: any,
-  deepClone: Function,
+  dpClone: TDeepClone,
   hash: WeakMap<object, T>
 ) {
   if (isType('symbol', source)) return Symbol(source.description)
@@ -23,17 +24,17 @@ function handleSpeciBoundar<T = any>(
 
   if (isType('set', source)) {
     const newSet = new Set()
-    source.forEach((value: T) => newSet.add(deepClone(value, hash)))
+    source.forEach((value: T) => newSet.add(dpClone(value, hash)))
 
     return newSet
   }
   if (isType('map', source)) {
     const newMap = new Map()
-    source.forEach((value: T, key: T) =>
-      newMap.set(key, deepClone(value, hash))
-    )
+    source.forEach((value: T, key: T) => newMap.set(key, dpClone(value, hash)))
     return newMap
   }
+
+  return null
 }
 
 export function deepClone(source: any, hash = new WeakMap<object, any>()) {

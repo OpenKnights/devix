@@ -10,7 +10,7 @@ export function debounce<T extends (...args: any[]) => any>(
   let timer: ReturnType<typeof setTimeout> | null = null
   let isInvoke: boolean = false
 
-  function _debounce(this: any, ...args: Parameters<T>) {
+  function subDebounce(this: any, ...args: Parameters<T>) {
     return new Promise<ReturnType<T>>((resolve, reject) => {
       if (timer !== null) clearTimeout(timer)
 
@@ -39,13 +39,13 @@ export function debounce<T extends (...args: any[]) => any>(
     })
   }
 
-  _debounce.cancel = function (): void {
+  subDebounce.cancel = () => {
     if (timer !== null) clearTimeout(timer)
     timer = null
     isInvoke = false
   }
 
-  return _debounce
+  return subDebounce
 }
 
 export function throttle<T extends (...args: any[]) => any>(
@@ -59,7 +59,7 @@ export function throttle<T extends (...args: any[]) => any>(
   let startTime: number = 0
   let timer: ReturnType<typeof setTimeout> | null = null
 
-  function _throttle(this: any, ...args: Parameters<T>) {
+  function subThrottle(this: any, ...args: Parameters<T>) {
     return new Promise<ReturnType<T>>((resolve, reject) => {
       try {
         const nowTime = Date.now()
@@ -90,11 +90,11 @@ export function throttle<T extends (...args: any[]) => any>(
     })
   }
 
-  _throttle.cancel = function () {
+  subThrottle.cancel = () => {
     if (timer) clearTimeout(timer)
     startTime = 0
     timer = null
   }
 
-  return _throttle
+  return subThrottle
 }

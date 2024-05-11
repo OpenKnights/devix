@@ -1,30 +1,29 @@
-import { isType } from './typeof'
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable no-continue */
 import { Tcase, TCases, TTransGetParams } from '../types'
+import { isType } from './typeof'
 
-export function currying(fn: Function) {
+export function currying(fn: (...args: any[]) => any) {
   function curried(this: any, ...args: any[]) {
-    if (args.length >= fn.length) {
-      return fn.apply(this, args)
-    } else {
-      return function (this: any, ...args2: any[]) {
-        return curried.apply(this, args.concat(args2))
-      }
+    if (args.length >= fn.length) return fn.apply(this, args)
+
+    return function subCurried(this: any, ...args2: any[]) {
+      return curried.apply(this, args.concat(args2))
     }
   }
   return curried
 }
 
-export function compose(...fns: Function[]) {
-  const length = fns.length
-  if (length <= 0) return
+export function compose(...fns: ((...args: any[]) => any)[]) {
+  const { length } = fns
+  if (length <= 0) return null
   for (let i = 0; i < length; i++) {
     const fn = fns[i]
     if (typeof fn !== 'function') {
       throw new Error(`argument with index ${i} is not a function`)
     }
   }
-
-  return function (this: any, ...args: any[]) {
+  function executeFn(this: any, ...args: any[]) {
     let index = 0
     let result = fns[index].apply(this, args)
     while (++index < length) {
@@ -32,10 +31,19 @@ export function compose(...fns: Function[]) {
     }
     return result
   }
+
+  return executeFn
 }
 
 export function insertStr(soure: string, start: number, newStr: string) {
   return soure.slice(0, start) + newStr + soure.slice(start)
+}
+
+function setCaseType(soure: string, caseType: Tcase) {
+  const newStr =
+    soure.slice(0, 1)[caseType === 'upper' ? 'toUpperCase' : 'toLowerCase']() +
+    soure.slice(1).toLowerCase()
+  return newStr
 }
 
 export function stringCase(
@@ -54,16 +62,10 @@ export function stringCase(
   return newStr.join(separate)
 }
 
-function setCaseType(soure: string, caseType: Tcase) {
-  const newStr =
-    soure.slice(0, 1)[caseType === 'upper' ? 'toUpperCase' : 'toLowerCase']() +
-    soure.slice(1).toLowerCase()
-  return newStr
-}
-
 // Transform Parameters
 export const transformGetParams: TTransGetParams = (params) => {
   let result = ''
+
   for (const propName of Object.keys(params)) {
     const value = params[propName]
     const part = `${encodeURIComponent(propName)}=`
@@ -75,10 +77,10 @@ export const transformGetParams: TTransGetParams = (params) => {
     }
 
     for (const key of Object.keys(value)) {
-      if (isType('empty', value)) continue
+      if (!isType('empty', value)) continue
 
-      const params = propName + `[${key}]`
-      const subPart = `${encodeURIComponent(params)}=`
+      const paramsStr = `${propName}[${key}]`
+      const subPart = `${encodeURIComponent(paramsStr)}=`
 
       result += `${subPart + encodeURIComponent(value[key])}&`
     }

@@ -2,7 +2,7 @@ import { ITypeCheckes, TIsType } from '../types'
 
 export default function getDataType(target: any) {
   const type = typeof target
-  return type != 'object'
+  return type !== 'object'
     ? type
     : Object.prototype.toString.call(target).slice(8, -1).toLowerCase()
 }
