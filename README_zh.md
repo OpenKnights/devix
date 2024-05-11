@@ -23,12 +23,7 @@ const { [[ModuleName]]  } = require('devix')
 ## 使用
 
 ```javascript
-import { localCache, bubblingSort, isType } from 'devix'
-
-// 使用 localCache
-localCache.setCache('userInfo', { name: 'king', age: 18 })
-const userInfo = localCache.get('userInfo')
-console.log('userInfo', userInfo)
+import { bubblingSort, isType } from 'devix'
 
 // 使用 bubblingSort、
 const arr1 = [123, 346, 62, 2456, 56123, 1, 64, 61, 453, 72345]
@@ -53,13 +48,6 @@ console.log(`isType(userInfo.age,'number') -> true`, isType(userInfo, 'number'))
 ```
 
 ## 方法
-
-### 缓存相关
-
-提供缓存操作的相关方法。
-
-- localCache
-- sessionCache
 
 ### 拷贝相关
 

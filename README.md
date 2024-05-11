@@ -23,12 +23,7 @@ const { [[ModuleName]]  } = require('devix')
 ## Usage
 
 ```javascript
-import { localCache, bubblingSort, isType } from 'devix'
-
-// Using localCache
-localCache.setCache('userInfo', { name: 'king', age: 18 })
-const userInfo = localCache.get('userInfo')
-console.log('userInfo', userInfo)
+import { bubblingSort, isType } from 'devix'
 
 // Using bubblingSort、
 const arr1 = [123, 346, 62, 2456, 56123, 1, 64, 61, 453, 72345]
@@ -53,13 +48,6 @@ console.log(`isType(userInfo.age,'number') -> true`, isType(userInfo, 'number'))
 ```
 
 ## API
-
-### Cache Apis
-
-Provides methods related to cache operations.
-
-- localCache
-- sessionCache
 
 ### Clone Apis
 
