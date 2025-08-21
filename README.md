@@ -14,10 +14,10 @@ Then, utilize modern module bundling tools such as Vite or Webpack to import thi
 
 ```javascript
 // Using ES Module
-import { [[ModuleName]] } from 'devix'
+import { shallowClone } from 'devix'
 
 // Using CommonJS
-const { [[ModuleName]]  } = require('devix')
+const { deepClone } = require('devix')
 ```
 
 ## Usage

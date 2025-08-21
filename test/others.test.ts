@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest'
 import { compose, currying, insertStr, stringCase } from '../src/others'
 
 test('testing currying', () => {

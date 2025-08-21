@@ -1,10 +1,10 @@
-import { isType } from './typeof'
-import { TFormatTimer, ITimerObj } from '../types'
+import type { FormatTimerFn, TimerFormatObj } from './types'
 
-const formatRules = new Map<string, keyof ITimerObj>([
+import { isType } from './typeof'
+
+const formatRules = new Map<string, keyof TimerFormatObj>([
   ['yyyy', 'year'],
   ['MM', 'month'],
-
   ['dd', 'day'],
   ['HH', 'hours'],
   ['mm', 'minutes'],
@@ -30,7 +30,7 @@ function formatNumber(value: number): string {
   return value.toString().padStart(2, '0')
 }
 
-function createTimerObj(date: Date): ITimerObj {
+function createTimerFormatObj(date: Date): TimerFormatObj {
   const dayOfWeek = date.getDay() === 0 ? 7 : date.getDay()
   return {
     year: date.getFullYear().toString(),
@@ -44,25 +44,26 @@ function createTimerObj(date: Date): ITimerObj {
   }
 }
 
-export const formatTimer: TFormatTimer = (
+export const formatTimer: FormatTimerFn = (
   cellValue,
-  formatType = 'yyyy-MM-dd HH:mm:ss'
+  formatOption = 'yyyy-MM-dd HH:mm:ss'
 ) => {
   if (!cellValue) return new Date().toISOString()
 
   const date = new Date(cellValue)
-  const timerObj = createTimerObj(date)
+  const timerFormatObj = createTimerFormatObj(date)
 
-  if (isType('string', formatType) && !formatType.trim()) return timerObj
+  if (isType('string', formatOption) && !formatOption.trim())
+    return timerFormatObj
 
-  const timerStr = Array.from(formatRules).reduce(
+  const timerFormatStr = Array.from(formatRules).reduce(
     (currentFormat, [rule, key]) => {
-      return currentFormat.replace(new RegExp(rule, 'g'), timerObj[key])
+      return currentFormat.replace(new RegExp(rule, 'g'), timerFormatObj[key])
     },
-    formatType
+    formatOption
   )
 
-  return timerStr
+  return timerFormatStr
 }
 
 export async function setTimer(

@@ -4,7 +4,6 @@ export enum SortType {
 }
 
 function swap<T>(array: T[], index1: number, index2: number): void {
-  // eslint-disable-next-line no-param-reassign
   ;[array[index1], array[index2]] = [array[index2], array[index1]]
 }
 

@@ -1,6 +1,4 @@
-/* eslint-disable no-restricted-syntax */
-/* eslint-disable no-continue */
-import { Tcase, TCases, TTransGetParams } from '../types'
+import type { CaseType, CaseTypeTuple } from './types'
 import { isType } from './typeof'
 
 export function currying(fn: (...args: any[]) => any) {
@@ -20,7 +18,7 @@ export function compose(...fns: ((...args: any[]) => any)[]) {
   for (let i = 0; i < length; i++) {
     const fn = fns[i]
     if (typeof fn !== 'function') {
-      throw new Error(`argument with index ${i} is not a function`)
+      throw new TypeError(`argument with index ${i} is not a function`)
     }
   }
   function executeFn(this: any, ...args: any[]) {
@@ -39,9 +37,9 @@ export function insertStr(soure: string, start: number, newStr: string) {
   return soure.slice(0, start) + newStr + soure.slice(start)
 }
 
-function setCaseType(soure: string, caseType: Tcase) {
+function setCaseType(soure: string, type: CaseType) {
   const newStr =
-    soure.slice(0, 1)[caseType === 'upper' ? 'toUpperCase' : 'toLowerCase']() +
+    soure.slice(0, 1)[type === 'upper' ? 'toUpperCase' : 'toLowerCase']() +
     soure.slice(1).toLowerCase()
   return newStr
 }
@@ -49,7 +47,7 @@ function setCaseType(soure: string, caseType: Tcase) {
 export function stringCase(
   soure: string,
   separa: string[] = ['', ''],
-  cases: TCases = ['upper', 'upper']
+  cases: CaseTypeTuple = ['upper', 'upper']
 ) {
   const [separator, separate] = separa
   const [firstCase, argsCase] = cases
@@ -63,7 +61,7 @@ export function stringCase(
 }
 
 // Transform Parameters
-export const transformGetParams: TTransGetParams = (params) => {
+export const transformGetParams = (params: Record<string, any>): string => {
   let result = ''
 
   for (const propName of Object.keys(params)) {

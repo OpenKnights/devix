@@ -1,4 +1,5 @@
-import { TDeepClone } from '../types'
+import type { DeepCloneFn } from './types'
+
 import { isType } from './typeof'
 
 //! Function Shallow Copy
@@ -15,7 +16,7 @@ const isFormat = (target: any) =>
 
 function handleSpeciBoundar<T = any>(
   source: any,
-  dpClone: TDeepClone,
+  dpClone: DeepCloneFn,
   hash: WeakMap<object, T>
 ) {
   if (isType('symbol', source)) return Symbol(source.description)

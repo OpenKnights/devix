@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest'
 import { bubblingSort } from '../src/sort'
 
 test('bubbling sort', () => {

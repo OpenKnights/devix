@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest'
 import { deepClone, shallowClone } from '../src/clone'
 
 test('testing shallowClone', () => {

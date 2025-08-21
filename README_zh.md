@@ -14,10 +14,10 @@ npm install --save-dev devix
 
 ```javascript
 // 使用 ES Module
-import { [[ModuleName]] } from 'devix'
+import { shallowClone } from 'devix'
 
 // 使用 CommonJS
-const { [[ModuleName]]  } = require('devix')
+const { deepClone } = require('devix')
 ```
 
 ## 使用

@@ -1,5 +1,3 @@
-import { ITypeCheckes, TIsType } from '../types'
-
 export default function getDataType(target: any) {
   const type = typeof target
   return type !== 'object'
@@ -7,34 +5,38 @@ export default function getDataType(target: any) {
     : Object.prototype.toString.call(target).slice(8, -1).toLowerCase()
 }
 
-const typeCheckers: ITypeCheckes = {
-  // DataType
-  undefined: (target) => typeof target === 'undefined',
-  null: (target) => target === null,
-  number: (target) => typeof target === 'number',
-  string: (target) => typeof target === 'string',
-  boolean: (target) => typeof target === 'boolean',
-  symbol: (target) => typeof target === 'symbol',
-  bigint: (target) => typeof target === 'bigint',
+const typeCheckRules = {
+  // Basic type
+  undefined: (target: unknown) => typeof target === 'undefined',
+  null: (target: unknown) => target === null,
+  number: (target: unknown) => typeof target === 'number',
+  string: (target: unknown) => typeof target === 'string',
+  boolean: (target: unknown) => typeof target === 'boolean',
+  symbol: (target: unknown) => typeof target === 'symbol',
+  bigint: (target: unknown) => typeof target === 'bigint',
 
-  // ObjectType
-  object: (target) => target !== null && typeof target === 'object',
-  array: (target) => Array.isArray(target),
-  date: (target) => target instanceof Date,
-  function: (target) => typeof target === 'function',
-  set: (target) => target instanceof Set,
-  map: (target) => target instanceof Map,
-  regexp: (target) => target instanceof RegExp,
-  promise: (target) => target instanceof Promise,
+  // Citation type
+  object: (target: unknown) => target !== null && typeof target === 'object',
+  array: (target: unknown) => Array.isArray(target),
+  function: (target: unknown) => typeof target === 'function',
+  date: (target: unknown) => target instanceof Date,
+  set: (target: unknown) => target instanceof Set,
+  map: (target: unknown) => target instanceof Map,
+  regexp: (target: unknown) => target instanceof RegExp,
+  promise: (target: unknown) => target instanceof Promise,
 
-  // ExpandType
-  empty: (target) =>
-    !(target !== null && target !== '' && typeof target !== 'undefined')
+  // Expand type
+  empty(target: unknown) {
+    return this.string(target) && target === ''
+  }
+  // !(target !== null && target !== "" && typeof target !== "undefined"),
 }
 
-export const isType: TIsType = (type: string, target: any) => {
-  const dataType = typeCheckers[type]
-    ? typeCheckers[type](target)
+type TypeCheckOption = keyof typeof typeCheckRules
+
+export const isType = (type: TypeCheckOption, target: unknown): boolean => {
+  const dataType = typeCheckRules[type]
+    ? typeCheckRules[type](target)
     : getDataType(target) === type
   return dataType
 }

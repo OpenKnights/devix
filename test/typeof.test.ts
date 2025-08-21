@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest'
 import getDataType, { isType } from '../src/typeof'
 
 test('testing isType', () => {
