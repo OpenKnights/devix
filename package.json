@@ -20,19 +20,14 @@
   "files": [
     "dist/"
   ],
-  "main": "./dist/index.cjs.js",
-  "module": "./dist/index.esm.js",
-  "types": "./index.d.ts",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./index.d.ts",
+      "types": "./dist/index.d.ts",
       "require": "./dist/index.cjs.js",
       "import": "./dist/index.esm.js"
-    },
-    "./lib/**": {
-      "types": "./lib/**/index.d.ts",
-      "require": "./lib/**/index.cjs.js",
-      "import": "./lib/**/index.esm.js"
     },
     "./*": "./*"
   },
