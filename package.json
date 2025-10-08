@@ -28,11 +28,10 @@
       "types": "./dist/index.d.ts",
       "require": "./dist/index.cjs",
       "import": "./dist/index.js"
-    },
-    "./*": "./*"
+    }
   },
   "scripts": {
-    "build": "tsdown --clear --dts",
+    "build": "tsdown",
     "test": "vitest run",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
@@ -40,7 +39,8 @@
     "release": "bumpp && pnpm publish"
   },
   "devDependencies": {
-    "@king-3/eslint-config": "^1.0.3",
+    "@king-3/eslint-config": "1.0.8",
+    "@king-3/prettier-config": "^1.0.2",
     "bumpp": "^10.2.3",
     "eslint": "^9.33.0",
     "prettier": "^3.6.2",
