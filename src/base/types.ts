@@ -1,4 +1,21 @@
-export enum SortType {
-  ASC = 'ASC',
-  DESC = 'DESC'
-}
+export type SortType = 'ASC' | 'DESC'
+
+export type CommonType = 
+  | 'string'
+  | 'number'
+  | 'boolean'
+  | 'array'
+  | 'object'
+  | 'function'
+  | 'null'
+  | 'undefined'
+  | 'date'
+  | 'regexp'
+  | 'map'
+  | 'set'
+  | 'weakmap'
+  | 'weakset'
+  | 'promise'
+  | 'error'
+  | 'symbol'
+  | 'bigint'

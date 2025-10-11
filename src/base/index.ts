@@ -1,3 +1,7 @@
-export * from './array'
+import * as base from './base'
 
-const base = {}
+export default base
+export * from './base'
+
+export type * from './types'
+
