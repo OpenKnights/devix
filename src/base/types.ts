@@ -1,6 +1,12 @@
+/* array */
 export type SortType = 'ASC' | 'DESC'
 
-export type CommonType = 
+/* string */
+export type CaseType = 'upper' | 'lower'
+export type CaseTypeTuple = [CaseType, CaseType]
+
+/* typed */
+export type CommonType =
   | 'string'
   | 'number'
   | 'boolean'
@@ -19,3 +25,20 @@ export type CommonType =
   | 'error'
   | 'symbol'
   | 'bigint'
+
+/* date */
+export interface DateFormatValues {
+  year: string
+  month: string
+  day: string
+  hours: string
+  minutes: string
+  seconds: string
+  week: string
+  weekNum: number
+}
+
+/* timer */
+export interface TimerControl {
+  cancel: () => void
+}

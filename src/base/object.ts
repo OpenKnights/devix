@@ -1,4 +1,4 @@
-import { isArray, isPrimitive, isSymbol, isType } from "./typed"
+import { isArray, isPrimitive, isSymbol, isType } from './typed'
 
 /**
  * Creates a shallow copy of the given obejct/value.
@@ -22,7 +22,7 @@ export const shallowClone = <T>(obj: T): T => {
   const newObj = new ((obj as object).constructor as { new (): T })()
 
   // Assign the props.
-  Object.getOwnPropertyNames(obj).forEach(prop => {
+  Object.getOwnPropertyNames(obj).forEach((prop) => {
     // Bypass type checking since the primitive cases
     // are already checked in the beginning
     ;(newObj as any)[prop] = (obj as any)[prop]
@@ -33,10 +33,10 @@ export const shallowClone = <T>(obj: T): T => {
 
 /**
  * Deep clones a value, supporting complex types like objects, arrays, Map, and Set
- * 
+ *
  * @template T - The type of the value to be cloned
  * @param {T} source - The source value to clone
- * @param {WeakMap<object, any>} [hash=new WeakMap()] - Hash map for handling circular references
+ * @param {WeakMap<object, any>} [hash] - Hash map for handling circular references
  * @returns {T} The cloned new value
  */
 export function deepClone<T>(source: T, hash = new WeakMap<object, any>()): T {
@@ -82,7 +82,7 @@ export function deepClone<T>(source: T, hash = new WeakMap<object, any>()): T {
   hash.set(source as object, cloneObject)
 
   if (isArr) {
-    (source as any[]).forEach((item, index) => {
+    ;(source as any[]).forEach((item, index) => {
       cloneObject[index] = deepClone(item, hash)
     })
   } else {

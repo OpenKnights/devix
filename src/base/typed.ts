@@ -1,4 +1,4 @@
-import { CommonType } from "./types"
+import type { CommonType } from './types'
 
 export const isSymbol = (value: any): value is symbol => {
   return !!value && value.constructor === Symbol
@@ -26,20 +26,14 @@ export const isPrimitive = (value: any): boolean => {
   )
 }
 
+// eslint-disable-next-line typescript/no-unsafe-function-type
 export const isFunction = (value: any): value is Function => {
   return !!(value && value.constructor && value.call && value.apply)
 }
 
 export const isString = (value: any): value is string => {
+  // eslint-disable-next-line unicorn/no-instanceof-builtins
   return typeof value === 'string' || value instanceof String
-}
-
-export const isInt = (value: any): value is number => {
-  return isNumber(value) && value % 1 === 0
-}
-
-export const isFloat = (value: any): value is number => {
-  return isNumber(value) && value % 1 !== 0
 }
 
 export const isNumber = (value: any): value is number => {
@@ -48,6 +42,14 @@ export const isNumber = (value: any): value is number => {
   } catch {
     return false
   }
+}
+
+export const isInt = (value: any): value is number => {
+  return isNumber(value) && value % 1 === 0
+}
+
+export const isFloat = (value: any): value is number => {
+  return isNumber(value) && value % 1 !== 0
 }
 
 export const isDate = (value: any): value is Date => {
@@ -71,11 +73,9 @@ export const isEmpty = (value: any) => {
   if (value === null || value === undefined) return true
   if (isNumber(value)) return value === 0
 
-  if (isDate(value)) return isNaN(value.getTime())
+  if (isDate(value)) return Number.isNaN(value.getTime())
   if (isFunction(value)) return false
   if (isSymbol(value)) return false
-  
-  if (isString(value) && value.trim() === '') return true
 
   const length = (value as any).length
   if (isNumber(length)) return length === 0
@@ -121,22 +121,24 @@ export const isEqual = <TType>(x: TType, y: TType): boolean => {
  * getType('hello') // Returns CommonType
  *
  * // Extend a custom type
- * getType<'vue' | 'react'>(component) // Returns CommonType | 'vue' | 'react'
+ * getType<'set' | 'map'>(value) // Returns CommonType | 'set' | 'map'
  */
 export const getType = <T extends string = never>(
   target: unknown
 ): CommonType | T => {
-  return Object.prototype.toString.call(target).slice(8, -1).toLowerCase() as CommonType | T
+  return Object.prototype.toString.call(target).slice(8, -1).toLowerCase() as
+    | CommonType
+    | T
 }
 
 /**
  * Checks if the target is of a specified type
- * @param target - value to check
  * @param type - expected type name
+ * @param target - value to check
  */
 export const isType = <T extends string = never>(
   type: CommonType | T,
-  target: unknown,
+  target: unknown
 ): boolean => {
   return getType<T>(target) === type
 }
