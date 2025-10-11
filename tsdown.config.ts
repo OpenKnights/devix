@@ -12,7 +12,8 @@ const createConfigs = (base: UserConfig, configs: UserConfig[]) => {
 
 const baseConfig: UserConfig = {
   entry: {
-    base: 'src/base/index.ts'
+    base: 'src/base/index.ts',
+    precision: 'src/precision/index.ts'
   },
   clean: true
 }
