@@ -1,87 +1,304 @@
-import { CacheType, isJsonString, isObject } from './util'
+import type { GetOptions, SetOptions, StorageAdapter } from './types'
+import {
+  isArrayIndex,
+  isJsonString,
+  isObject,
+  isString,
+  parsePath
+} from './util'
 
-/** StorageCache Class Implemented Based on the Storage API */
-class StorageCache {
-  private storage: Storage
+export class DevixStorage {
+  private adapter: StorageAdapter
 
-  /**
-   * Creates an instance of StorageCache.
-   *
-   * @param {CacheType} type
-   * @memberof StorageCache
-   */
-  constructor(type: CacheType) {
-    this.storage = type === CacheType.Local ? localStorage : sessionStorage
+  constructor(adapter: StorageAdapter) {
+    this.adapter = adapter
   }
 
   /**
-   * Retrieve the cached data based on the provided key
-   *
-   * @param {string} key
-   * @return {*}
+   * Get stored value with automatic JSON deserialization
    */
-  getCache(key: string) {
-    const value: any = this.storage.getItem(key)
+  get<T = any>(key: string, options?: GetOptions<T>): T | null {
+    try {
+      const rawValue = this.adapter.getItem(key)
 
-    if (!value) return null
+      if (rawValue === null) {
+        return options?.defaultValue ?? null
+      }
 
-    return isJsonString(value) ? JSON.parse(value) : value
+      // Attempt to parse JSON
+      if (isJsonString(rawValue)) {
+        return JSON.parse(rawValue) as T
+      }
+
+      return rawValue as T
+    } catch (error) {
+      console.error(`DevixStorage.get error for key "${key}":`, error)
+      return options?.defaultValue ?? null
+    }
   }
 
   /**
-   * Set the cached data based on the provided key and value
-   *
-   * @param {string} key
-   * @param {any} value
+   * Set storage value with automatic object serialization
+   * Supports deep path modification and array indices
    */
-  setCache(key: string, value: any) {
-    const cacheValue = isObject(value) ? JSON.stringify(value) : value
+  set(key: string, value: any, options?: SetOptions): void {
+    try {
+      // Handle property update scenario
+      if (this._shouldUpdateProperty(key, options)) {
+        this._updateByPath(key, value, options!)
+        return
+      }
 
-    this.storage.setItem(key, cacheValue)
+      // Serialize and store
+      const serialized = this._serialize(value)
+      this.adapter.setItem(key, serialized)
+    } catch (error) {
+      console.error(`DevixStorage.set error for key "${key}":`, error)
+    }
   }
 
   /**
-   * Update the cached object based on the provided key, property, and value
-   *
-   * @param {string} key
-   * @param {string} property
-   * @param {any} value
+   * Remove specified key
    */
-  updateCache(key: string, property: string, value: any) {
-    const cache: { [key: string]: any } = this.getCache(key)
-    if (!isObject(cache)) return
-
-    cache[property] = value
-    this.setCache(key, cache)
+  remove(key: string): void {
+    try {
+      this.adapter.removeItem(key)
+    } catch (error) {
+      console.error(`DevixStorage.remove error for key "${key}":`, error)
+    }
   }
 
   /**
-   * Delete the cached data based on the provided key
-   *
-   * @param {string} key
+   * Check if key exists
    */
-  deleteCache(key: string) {
-    this.storage.removeItem(key)
+  has(key: string): boolean {
+    try {
+      return this.adapter.getItem(key) !== null
+    } catch (error) {
+      console.error(`DevixStorage.has error for key "${key}":`, error)
+      return false
+    }
   }
 
   /**
-   * Check if the cached data exists based on the provided key
-   *
-   * @param {string} key
-   * @return {*}  {boolean}
+   * Clear all storage
    */
-  hasCache(key: string): boolean {
-    const isHas = !!this.getCache(key)
-    return isHas
+  clear(): void {
+    try {
+      this.adapter.clear()
+    } catch (error) {
+      console.error('DevixStorage.clear error:', error)
+    }
+  }
+
+  // ==================== Private Methods ====================
+
+  /**
+   * Check if should update object property
+   */
+  private _shouldUpdateProperty(key: string, options?: SetOptions): boolean {
+    if (!options?.property) return false
+
+    const property = options.property.trim()
+    if (!property) return false
+
+    return this.has(key)
   }
 
   /**
-   * Clear all cached data
+   * Update value by path (supports deep paths and array indices)
    */
-  clearCache() {
-    this.storage.clear()
+  private _updateByPath(key: string, value: any, options: SetOptions): void {
+    const existingValue = this.get(key)
+    const pathSegments = parsePath(options.property!)
+
+    if (pathSegments.length === 0) {
+      console.warn(`Invalid property path: "${options.property}"`)
+      return
+    }
+
+    // Single-level path, use original logic (backward compatible)
+    if (pathSegments.length === 1) {
+      this._updateSingleProperty(key, existingValue, value, pathSegments[0])
+      return
+    }
+
+    // Deep path
+    const result = this._setDeepValue(
+      existingValue,
+      pathSegments,
+      value,
+      options.createPath ?? false
+    )
+
+    if (result.success) {
+      const serialized = JSON.stringify(existingValue)
+      this.adapter.setItem(key, serialized)
+    }
+  }
+
+  /**
+   * Update single property (original logic)
+   */
+  private _updateSingleProperty(
+    key: string,
+    target: any,
+    value: any,
+    property: string
+  ): void {
+    // Handle array index
+    if (Array.isArray(target) && isArrayIndex(property)) {
+      const index = Number.parseInt(property, 10)
+      if (index >= 0 && index < target.length) {
+        target[index] = value
+        const serialized = JSON.stringify(target)
+        this.adapter.setItem(key, serialized)
+      } else {
+        console.warn(
+          `Array index ${index} out of bounds for key "${key}" (length: ${target.length})`
+        )
+      }
+      return
+    }
+
+    // Handle object property
+    if (!isObject(target)) {
+      console.warn(
+        `Cannot update property "${property}" on non-object value for key "${key}"`
+      )
+      return
+    }
+
+    target[property] = value
+    const serialized = JSON.stringify(target)
+    this.adapter.setItem(key, serialized)
+  }
+
+  /**
+   * Set deep path value
+   */
+  private _setDeepValue(
+    obj: any,
+    pathSegments: string[],
+    value: any,
+    createPath: boolean
+  ): { success: boolean; message?: string } {
+    let current = obj
+
+    // Traverse to second-to-last level
+    for (let i = 0; i < pathSegments.length - 1; i++) {
+      const segment = pathSegments[i]
+      const nextSegment = pathSegments[i + 1]
+      const isCurrentArrayIndex = isArrayIndex(segment)
+      const isNextArrayIndex = isArrayIndex(nextSegment)
+
+      // Handle current level
+      if (isCurrentArrayIndex) {
+        // Current is array index
+        if (!Array.isArray(current)) {
+          console.warn(
+            `Expected array at path "${pathSegments.slice(0, i + 1).join('.')}", got ${typeof current}`
+          )
+          return { success: false, message: 'Type mismatch: expected array' }
+        }
+
+        const index = Number.parseInt(segment, 10)
+        if (index < 0 || index >= current.length) {
+          console.warn(
+            `Array index ${index} out of bounds at path "${pathSegments.slice(0, i + 1).join('.')}"`
+          )
+          return { success: false, message: 'Array index out of bounds' }
+        }
+
+        // Check if next level exists
+        if (current[index] === undefined || current[index] === null) {
+          if (createPath) {
+            // Create object or array based on next segment
+            current[index] = isNextArrayIndex ? [] : {}
+          } else {
+            console.warn(
+              `Path does not exist: "${pathSegments.slice(0, i + 2).join('.')}". Use createPath: true to auto-create.`
+            )
+            return { success: false, message: 'Path does not exist' }
+          }
+        }
+
+        current = current[index]
+      } else {
+        // Current is object property
+        if (!isObject(current)) {
+          console.warn(
+            `Expected object at path "${pathSegments.slice(0, i + 1).join('.')}", got ${typeof current}`
+          )
+          return { success: false, message: 'Type mismatch: expected object' }
+        }
+
+        // Check if property exists
+        if (!(segment in current)) {
+          if (createPath) {
+            // Create object or array based on next segment
+            current[segment] = isNextArrayIndex ? [] : {}
+          } else {
+            console.warn(
+              `Property "${segment}" does not exist at path "${pathSegments.slice(0, i + 1).join('.')}". Use createPath: true to auto-create.`
+            )
+            return { success: false, message: 'Property does not exist' }
+          }
+        }
+
+        current = current[segment]
+      }
+    }
+
+    // Set last level value
+    const lastSegment = pathSegments[pathSegments.length - 1]
+
+    if (isArrayIndex(lastSegment)) {
+      // Last level is array index
+      if (!Array.isArray(current)) {
+        console.warn(
+          `Expected array at path "${pathSegments.slice(0, -1).join('.')}", got ${typeof current}`
+        )
+        return { success: false, message: 'Type mismatch: expected array' }
+      }
+
+      const index = Number.parseInt(lastSegment, 10)
+      if (index < 0 || index >= current.length) {
+        console.warn(
+          `Array index ${index} out of bounds at path "${pathSegments.join('.')}"`
+        )
+        return { success: false, message: 'Array index out of bounds' }
+      }
+
+      current[index] = value
+    } else {
+      // Last level is object property
+      if (!isObject(current)) {
+        console.warn(
+          `Expected object at path "${pathSegments.slice(0, -1).join('.')}", got ${typeof current}`
+        )
+        return { success: false, message: 'Type mismatch: expected object' }
+      }
+
+      current[lastSegment] = value
+    }
+
+    return { success: true }
+  }
+
+  /**
+   * Serialize value
+   */
+  private _serialize(value: any): string {
+    if (isString(value)) {
+      return value
+    }
+
+    if (isObject(value) || Array.isArray(value)) {
+      return JSON.stringify(value)
+    }
+
+    // Handle other primitive types
+    return String(value)
   }
 }
-
-export const localCache = new StorageCache(CacheType.Local)
-export const sessionCache = new StorageCache(CacheType.Session)

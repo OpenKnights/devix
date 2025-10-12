@@ -1,4 +1,4 @@
-import { getDecimalLength, toInteger } from './utils'
+import { getDecimalLength, toInteger } from './util'
 
 /**
  * Add multiple numbers with precision

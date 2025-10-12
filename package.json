@@ -18,16 +18,21 @@
   },
   "author": "king-3 <w2196592083@gmail.com>",
   "files": [
-    "dist/"
+    "dist"
   ],
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/base.cjs",
+  "module": "./dist/base.js",
+  "types": "./dist/base.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "require": "./dist/index.cjs",
-      "import": "./dist/index.js"
+      "types": "./dist/base.d.ts",
+      "require": "./dist/base.cjs",
+      "import": "./dist/base.js"
+    },
+    "./precision": {
+      "types": "./dist/precision.d.ts",
+      "require": "./dist/precision.cjs",
+      "import": "./dist/precision.js"
     }
   },
   "scripts": {
@@ -36,13 +41,15 @@
     "lint": "eslint",
     "lint:fix": "eslint --fix",
     "format": "prettier --write ./**/*.{ts,json,md}",
-    "release": "bumpp && pnpm publish"
+    "release": "bumpp && pnpm publish",
+    "release:beta": "bumpp && pnpm publish --tag=beta"
   },
   "devDependencies": {
     "@king-3/eslint-config": "1.0.8",
     "@king-3/prettier-config": "^1.0.2",
     "bumpp": "^10.2.3",
     "eslint": "^9.33.0",
+    "node-localstorage": "^3.0.5",
     "prettier": "^3.6.2",
     "tsdown": "^0.14.1",
     "typescript": "^5.9.2",
