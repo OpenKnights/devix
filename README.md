@@ -2,6 +2,10 @@
 
 > Devix is a comprehensive, powerful, and compact JavaScript utility library.（ English | [简体中文](README_zh.md) ）
 
+> ⚠️ This repository has been archived.
+>
+> The project has moved to [kedash](https://github.com/OpenKnights/kedash), where all future updates will be maintained.
+
 ## Install
 
 Please make sure you install this library using npm or another package manager in a Node.js environment.
